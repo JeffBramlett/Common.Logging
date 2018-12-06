@@ -12,23 +12,22 @@ namespace MultiThreadedLogging
     {
         static void Main(string[] args)
         {
-            Logger logger = new Logger(WriteTheLogEntry);
+            Logger.Instance.SetWriteAction(WriteTheLogEntry);
 
-            ThreadPool.QueueUserWorkItem(new WaitCallback(StartLoop1ToLog), logger);
-            ThreadPool.QueueUserWorkItem(new WaitCallback(StartLoop2ToLog), logger);
+            ThreadPool.QueueUserWorkItem(new WaitCallback(StartLoop1ToLog));
+            ThreadPool.QueueUserWorkItem(new WaitCallback(StartLoop2ToLog));
 
             Console.ReadKey();
 
-            logger.Dispose();
+            Logger.Instance.Dispose();
         }
 
         private static void StartLoop1ToLog(object state)
         {
-            var logger = state as Logger;
             for (var i = 0; i < 10; i++)
             {
                 var something = "Loop: 1\tStep:" + i;
-                logger.SetModuleMetadata(typeof(Program)).LogInfo(something);
+                Logger.Instance.LogInfo(typeof(Program), something);
             }
         }
 
@@ -38,7 +37,7 @@ namespace MultiThreadedLogging
             for (var i = 0; i < 10; i++)
             {
                 var something = "Loop: 2\tStep:" + i;
-                logger.LogInfo(something);
+                Logger.Instance.LogInfo(typeof(Program), something);
             }
         }
 

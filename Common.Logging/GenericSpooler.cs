@@ -85,10 +85,7 @@ namespace Common.Logging
 
         public event SpoolerEmptyDelegate SpoolerEmpty;
 
-        /// <summary>
-        /// The delegate to use for the callback
-        /// </summary>
-        private readonly Action<T> _spoolerAction;
+        protected Action<T> SpoolerAction { get; set; }
         #endregion
 
         #region Ctors and Dtors
@@ -104,7 +101,7 @@ namespace Common.Logging
             }
 
             _inputs = new ConcurrentQueue<ItemMetaData>();
-            _spoolerAction = spoolerAction;
+            SpoolerAction = spoolerAction;
 
             _trafficEvent = new AutoResetEvent(false);
             _exitEvent = new AutoResetEvent(false);
@@ -268,11 +265,11 @@ namespace Common.Logging
                                     if (itemData.HoldOnItem)
                                         _itemActionEvent.Reset();
 
-                                    _spoolerAction(itemData.Item);
+                                    SpoolerAction(itemData.Item);
                                 }
                                 catch (Exception ex)
                                 {
-                                    NotifyException(_spoolerAction.Target, ex);
+                                    NotifyException(SpoolerAction.Target, ex);
                                 }
                             }
                         }

@@ -16,10 +16,8 @@ namespace LogTestInCore
 
             sw.Stop();
 
-            logger.SetElaspedTimeSpan(sw.Elapsed).LogFatal("Metadata set");
-
-            logger.LogDebug("Hello World!");
-            logger.LogInfo("Info {0}", 1);
+            logger.LogDebug(typeof(Program), "Hello World!");
+            logger.LogInfo(typeof(Program), "Info 1");
             LogMore(logger);
             LogWithException(logger);
 
@@ -31,10 +29,10 @@ namespace LogTestInCore
         private static void LogMore(Logger logger)
         {
             Stopwatch sw = Stopwatch.StartNew();
-            logger.LogWarning("with MORE");
+            logger.LogWarning(typeof(Program), "with MORE");
             sw.Stop();
 
-            logger.SetModuleMetadata(typeof(Program)).SetElaspedTimeSpan(sw.Elapsed).LogInfo("How much time to log");
+            logger.LogInfo(typeof(Program), "How much time to log", sw.Elapsed);
         }
 
         private static void LogWithException(Logger logger)
@@ -46,7 +44,7 @@ namespace LogTestInCore
             }
             catch (Exception ex)
             {
-                logger.SetModuleMetadata(typeof(Program)).SetException(ex).LogError("Divide by Zero test");
+                logger.LogError(typeof(Program), "Divide by Zero test", null, ex);
 
             }
         }

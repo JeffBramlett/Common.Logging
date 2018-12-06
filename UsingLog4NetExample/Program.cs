@@ -30,10 +30,10 @@ namespace UsingLog4NetExample
         private static void LogMore(Logger logger)
         {
             Stopwatch sw = Stopwatch.StartNew();
-            logger.LogDebug("with MORE");
+            logger.LogDebug(typeof(Program), "with MORE");
             sw.Stop();
 
-            logger.SetElaspedTimeSpan(sw.Elapsed).LogInfo("How much time to log");
+            logger.LogInfo(typeof(Program), "How much time to log", sw.Elapsed);
         }
 
         private static void LogWithException(Logger logger)
@@ -45,7 +45,7 @@ namespace UsingLog4NetExample
             }
             catch (Exception ex)
             {
-                logger.SetException(ex).LogError("Divide by Zero test");
+                logger.LogError(typeof(Program), "Divide by Zero test", null, ex);
             }
         }
 
