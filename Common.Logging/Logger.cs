@@ -2,21 +2,23 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace Common.Logging
 {
     /// <summary>
     /// Abstraction of a Logger 
     /// </summary>
-    public abstract class AbstractLogger : IFluentLogger
+    public class Logger : GenericSpooler<LogEntry>, ILogger
     {
         #region Private
-        private GenericSpooler<LogEntry> _logEntrySpooler;
-        ApplicationMetadata _appMetaData;
+        private ApplicationMetaData _appMetaData;
         #endregion
 
         #region Properties
         public string ElaspedTime { get; set; }
+
+        public string ModuleName { get; set; }
 
         public string CallerFile { get; set; }
 
@@ -26,29 +28,53 @@ namespace Common.Logging
 
         public Exception Exception { get; set; }
 
-        private ApplicationMetadata AppMetaData
+        private ApplicationMetaData AppMetaData
         {
             get
             {
-                _appMetaData = _appMetaData ?? new ApplicationMetadata();
-                return _appMetaData;
-            }
-        }
-
-        private GenericSpooler<LogEntry> LogEntrySpooler
-        {
-            get
-            {
-                if (_logEntrySpooler == null)
+                if (_appMetaData == null)
                 {
-                    _logEntrySpooler = new GenericSpooler<LogEntry>(WriteTheLogEntry);
+                    Assembly asm = Assembly.GetEntryAssembly();
+                    _appMetaData = new ApplicationMetaData()
+                    {
+                        ApplicationName = asm.FullName,
+                        Environment = Environment.UserDomainName,
+                        OS = Environment.OSVersion.Platform.ToString()
+                    };
                 }
-                return _logEntrySpooler;
+                return _appMetaData;
             }
         }
         #endregion
 
+        #region Ctors and Dtors
+
+        public Logger(Action<LogEntry> writeAction) :
+            base(writeAction)
+        {
+
+        }
+        #endregion
+
         #region Publics
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type">the type of the calling object</param>
+        /// <param name="filepath"></param>
+        /// <param name="caller"></param>
+        /// <param name="lineNo"></param>
+        /// <returns></returns>
+        public ILogger SetModuleMetadata(Type type, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0)
+        {
+            ModuleName = type.Name;
+            CallerFile = filepath.Substring(filepath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+            CallerMethod = caller;
+            LineNo = lineNo;
+
+            return this;
+        }
+
         /// <summary>
         /// Log a Debug message
         /// </summary>
@@ -59,14 +85,20 @@ namespace Common.Logging
             var logEntry = new LogEntry()
             {
                 ApplicationMetadata = AppMetaData,
-                CallerMetadata = new CallerMetadata()
+                ElaspedTime = ElaspedTime,
+
+            };
+
+            if (!string.IsNullOrEmpty(CallerFile))
+            {
+                logEntry.ModuleMetadata = new ModuleMetadata()
                 {
                     CallerFile = CallerFile,
                     CallerMethod = CallerMethod,
                     LineNo = LineNo,
-                },
-                ElaspedTime = ElaspedTime
-            };
+                    ModuleName = ModuleName
+                };
+            }
 
             logEntry.Level = LogLevels.Debug;
 
@@ -79,7 +111,7 @@ namespace Common.Logging
             logEntry.Exception = Exception;
             logEntry.Timestamp = DateTimeOffset.Now;
 
-            LogEntrySpooler.AddItem(logEntry);
+            AddItem(logEntry);
 
             ResetDefaults();
         }
@@ -94,14 +126,19 @@ namespace Common.Logging
             var logEntry = new LogEntry()
             {
                 ApplicationMetadata = AppMetaData,
-                CallerMetadata = new CallerMetadata()
+                ElaspedTime = ElaspedTime
+            };
+
+            if (!string.IsNullOrEmpty(CallerFile))
+            {
+                logEntry.ModuleMetadata = new ModuleMetadata()
                 {
                     CallerFile = CallerFile,
                     CallerMethod = CallerMethod,
                     LineNo = LineNo,
-                },
-                ElaspedTime = ElaspedTime
-            };
+                    ModuleName = ModuleName
+                };
+            }
 
             logEntry.Level = LogLevels.Error;
 
@@ -114,7 +151,7 @@ namespace Common.Logging
             logEntry.Exception = Exception;
             logEntry.Timestamp = DateTimeOffset.Now;
 
-            LogEntrySpooler.AddItem(logEntry);
+            AddItem(logEntry);
 
             ResetDefaults();
         }
@@ -129,14 +166,19 @@ namespace Common.Logging
             var logEntry = new LogEntry()
             {
                 ApplicationMetadata = AppMetaData,
-                CallerMetadata = new CallerMetadata()
+                ElaspedTime = ElaspedTime
+            };
+
+            if (!string.IsNullOrEmpty(CallerFile))
+            {
+                logEntry.ModuleMetadata = new ModuleMetadata()
                 {
                     CallerFile = CallerFile,
                     CallerMethod = CallerMethod,
                     LineNo = LineNo,
-                },
-                ElaspedTime = ElaspedTime
-            };
+                    ModuleName = ModuleName
+                };
+            }
 
             logEntry.Level = LogLevels.Fatal;
 
@@ -149,7 +191,7 @@ namespace Common.Logging
             logEntry.Exception = Exception;
             logEntry.Timestamp = DateTimeOffset.Now;
 
-            LogEntrySpooler.AddItem(logEntry);
+            AddItem(logEntry);
 
             ResetDefaults();
         }
@@ -164,14 +206,19 @@ namespace Common.Logging
             var logEntry = new LogEntry()
             {
                 ApplicationMetadata = AppMetaData,
-                CallerMetadata = new CallerMetadata()
+                ElaspedTime = ElaspedTime
+            };
+
+            if (!string.IsNullOrEmpty(CallerFile))
+            {
+                logEntry.ModuleMetadata = new ModuleMetadata()
                 {
                     CallerFile = CallerFile,
                     CallerMethod = CallerMethod,
                     LineNo = LineNo,
-                },
-                ElaspedTime = ElaspedTime
-            };
+                    ModuleName = ModuleName
+                };
+            }
 
             logEntry.Level = LogLevels.Info;
 
@@ -184,7 +231,7 @@ namespace Common.Logging
             logEntry.Exception = Exception;
             logEntry.Timestamp = DateTimeOffset.Now;
 
-            LogEntrySpooler.AddItem(logEntry);
+            AddItem(logEntry);
 
             ResetDefaults();
         }
@@ -199,14 +246,19 @@ namespace Common.Logging
             var logEntry = new LogEntry()
             {
                 ApplicationMetadata = AppMetaData,
-                CallerMetadata = new CallerMetadata()
+                ElaspedTime = ElaspedTime
+            };
+
+            if (!string.IsNullOrEmpty(CallerFile))
+            {
+                logEntry.ModuleMetadata = new ModuleMetadata()
                 {
                     CallerFile = CallerFile,
                     CallerMethod = CallerMethod,
                     LineNo = LineNo,
-                },
-                ElaspedTime = ElaspedTime
-            };
+                    ModuleName = ModuleName
+                };
+            }
 
             logEntry.Level = LogLevels.Warning;
 
@@ -219,7 +271,7 @@ namespace Common.Logging
             logEntry.Exception = Exception;
             logEntry.Timestamp = DateTimeOffset.Now;
 
-            LogEntrySpooler.AddItem(logEntry);
+            AddItem(logEntry);
 
             ResetDefaults();
         }
@@ -229,7 +281,7 @@ namespace Common.Logging
         /// </summary>
         /// <param name="ex">the exception to include in the log</param>
         /// <returns>this logger object</returns>
-        public IFluentLogger SetException(Exception ex)
+        public ILogger SetException(Exception ex)
         {
             Exception = ex;
             return this;
@@ -240,50 +292,11 @@ namespace Common.Logging
         /// </summary>
         /// <param name="elasped">the elasped time</param>
         /// <returns>this logger object</returns>
-        public IFluentLogger SetElaspedTimeSpan(TimeSpan elasped)
+        public ILogger SetElaspedTimeSpan(TimeSpan elasped)
         {
             ElaspedTime = elasped.ToString();
             return this;
         }
-
-        /// <summary>
-        /// Sets the overall application metadata from the Enviroment
-        /// </summary>
-        /// <returns>this logger object</returns>
-        public IFluentLogger SetApplicationMetaData()
-        {
-            Assembly asm = Assembly.GetEntryAssembly();
-
-            AppMetaData.ApplicationName = asm.FullName;
-            AppMetaData.Environment = Environment.UserDomainName;
-            AppMetaData.OS = Environment.OSVersion.Platform.ToString();
-
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the Caller metadata using the Compiler options
-        /// </summary>
-        /// <param name="filepath">the code filepath</param>
-        /// <param name="caller">the method making the call</param>
-        /// <param name="lineNo">the line number where the call originated</param>
-        /// <returns>this logger object</returns>
-        public IFluentLogger SetCallerMetaData([CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0)
-        {
-            CallerFile = filepath.Substring(filepath.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-            CallerMethod = caller;
-            LineNo = lineNo;
-
-            return this;
-        }
-        #endregion
-
-        #region Abstracts
-        /// <summary>
-        /// The overridde for implementing how the spooled LogEntry is persisted 
-        /// </summary>
-        /// <param name="logEntry"></param>
-        protected abstract void WriteTheLogEntry(LogEntry logEntry);
         #endregion
 
         #region privates
@@ -295,41 +308,13 @@ namespace Common.Logging
             Exception = null;
             ElaspedTime = null;
         }
+
         #endregion
 
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
+        #region Disposable Support
+        public override void GeneralDispose()
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    if (_logEntrySpooler != null)
-                    {
-                        _logEntrySpooler.Dispose();
-                    }
-                }
-                disposedValue = true;
-            }
-        }
-
-        /// <summary>
-        /// Finalizer
-        /// </summary>
-        ~AbstractLogger()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Dispose of this Logger
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            base.GeneralDispose();
         }
         #endregion
     }

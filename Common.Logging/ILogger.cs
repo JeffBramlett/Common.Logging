@@ -8,43 +8,31 @@ namespace Common.Logging
     /// <summary>
     /// Interface for a Logger with Fluent methods
     /// </summary>
-    public interface IFluentLogger : IDisposable
+    public interface ILogger : IDisposable
     {
         /// <summary>
-        /// Set the writer for LogEntries
+        /// 
         /// </summary>
-        /// <param name="writer">the writer to use</param>
-        /// <returns>this logger object</returns>
-        IFluentLogger SetLogWriter(IWriteLogEntry writer);
-
-        /// <summary>
-        /// Sets the overall application metadata from the Enviroment
-        /// </summary>
-        /// <returns>this logger object</returns>
-        IFluentLogger SetApplicationMetaData();
-
-        /// <summary>
-        /// Sets the Caller metadata using the Compiler options
-        /// </summary>
-        /// <param name="filepath">the code filepath</param>
-        /// <param name="caller">the method making the call</param>
-        /// <param name="lineNo">the line number where the call originated</param>
-        /// <returns>this logger object</returns>
-        IFluentLogger SetCallerMetaData([CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0);
+        /// <param name="type">the type of the calling object</param>
+        /// <param name="filepath"></param>
+        /// <param name="caller"></param>
+        /// <param name="lineNo"></param>
+        /// <returns></returns>
+        ILogger SetModuleMetadata(Type type, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0);
 
         /// <summary>
         /// Set an exception before logging a message
         /// </summary>
         /// <param name="ex">the exception to include in the log</param>
         /// <returns>this logger object</returns>
-        IFluentLogger SetException(Exception ex);
+        ILogger SetException(Exception ex);
 
         /// <summary>
         /// Set the Elasped time before logging the message
         /// </summary>
         /// <param name="elasped">the elasped time</param>
         /// <returns>this logger object</returns>
-        IFluentLogger SetElaspedTimeSpan(TimeSpan elasped);
+        ILogger SetElaspedTimeSpan(TimeSpan elasped);
 
         /// <summary>
         /// Log a Debug message

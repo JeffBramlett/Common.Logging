@@ -8,17 +8,9 @@ using Newtonsoft.Json.Converters;
 
 namespace LogTestInCore
 {
-    class DisplayLogger : AbstractLogger
+    class DisplayWriter : IWriteLogEntry
     {
-        private static Lazy<DisplayLogger> _instance = new Lazy<DisplayLogger>();
-
-        public static DisplayLogger Instance([CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0)
-        {
-            _instance.Value.SetCallerMetaData(filepath, caller, lineNo);
-            return _instance.Value;
-        }
-
-        protected override void WriteTheLogEntry(LogEntry logEntry)
+        public void WriteTheLogEntry(LogEntry logEntry)
         {
             var originColor = Console.ForegroundColor;
 

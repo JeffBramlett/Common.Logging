@@ -22,8 +22,7 @@ namespace Common.Logging
     public class LogEntry
     {
         #region fields
-        ApplicationMetadata _appMetadata;
-        CallerMetadata _callerMetadata;
+        ApplicationMetaData _appMetadata;
         #endregion
 
         #region Properties
@@ -55,13 +54,13 @@ namespace Common.Logging
         /// <summary>
         /// The application data for this log entry
         /// </summary>
-        public ApplicationMetadata ApplicationMetadata
+        public ApplicationMetaData ApplicationMetadata
         {
             get
             {
                 if (_appMetadata == null)
                 {
-                    _appMetadata = new ApplicationMetadata();
+                    _appMetadata = new ApplicationMetaData();
                 }
 
                 return _appMetadata;
@@ -75,15 +74,7 @@ namespace Common.Logging
         /// <summary>
         /// The caller metadata for this log entry
         /// </summary>
-        public CallerMetadata CallerMetadata
-        {
-            get
-            {
-                _callerMetadata = _callerMetadata ?? new CallerMetadata();
-                return _callerMetadata;
-            }
-            set { _callerMetadata = value; }
-        }
+        public ModuleMetadata ModuleMetadata { get; set; }
         #endregion
 
         #region Ctors and Dtors

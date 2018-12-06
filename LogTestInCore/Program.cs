@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Common.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Diagnostics;
 
 namespace LogTestInCore
@@ -8,30 +11,33 @@ namespace LogTestInCore
         static void Main(string[] args)
         {
             Stopwatch sw = Stopwatch.StartNew();
-            DisplayLogger.Instance().SetApplicationMetaData();
+
+            Logger logger = new Logger(WriteTheLogEntry);
+
             sw.Stop();
 
-            DisplayLogger.Instance().SetElaspedTimeSpan(sw.Elapsed).LogFatal("Metadata set");
+            logger.SetElaspedTimeSpan(sw.Elapsed).LogFatal("Metadata set");
 
-            DisplayLogger.Instance().LogDebug("Hello World!");
-            DisplayLogger.Instance().LogInfo("Info {0}", 1);
-            LogMore();
-            LogWithException();
+            logger.LogDebug("Hello World!");
+            logger.LogInfo("Info {0}", 1);
+            LogMore(logger);
+            LogWithException(logger);
+
             Console.ReadKey();
 
-            DisplayLogger.Instance().Dispose();
+            logger.Dispose();
         }
 
-        private static void LogMore()
+        private static void LogMore(Logger logger)
         {
             Stopwatch sw = Stopwatch.StartNew();
-            DisplayLogger.Instance().LogWarning("with MORE");
+            logger.LogWarning("with MORE");
             sw.Stop();
 
-            DisplayLogger.Instance().SetElaspedTimeSpan(sw.Elapsed).LogInfo("How much time to log");
+            logger.SetModuleMetadata(typeof(Program)).SetElaspedTimeSpan(sw.Elapsed).LogInfo("How much time to log");
         }
 
-        private static void LogWithException()
+        private static void LogWithException(Logger logger)
         {
             try
             {
@@ -40,9 +46,50 @@ namespace LogTestInCore
             }
             catch (Exception ex)
             {
-                DisplayLogger.Instance().SetException(ex).LogError("Divide by Zero test");
-                
+                logger.SetModuleMetadata(typeof(Program)).SetException(ex).LogError("Divide by Zero test");
+
             }
         }
+
+        private static void WriteTheLogEntry(LogEntry logEntry)
+        {
+            var originColor = Console.ForegroundColor;
+
+            JsonSerializerSettings serializerSettings = new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+
+            serializerSettings.Converters.Add(new StringEnumConverter());
+
+            string contents = JsonConvert.SerializeObject(logEntry, serializerSettings);
+
+            switch (logEntry.Level)
+            {
+                case LogLevels.Debug:
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine(contents);
+                    break;
+                case LogLevels.Info:
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine(contents);
+                    break;
+                case LogLevels.Warning:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(contents);
+                    break;
+                case LogLevels.Error:
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    Console.WriteLine(contents);
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(contents);
+                    break;
+            }
+
+            Console.ForegroundColor = originColor;
+        }
+
     }
 }

@@ -7,7 +7,7 @@ namespace Common.Logging
     /// <summary>
     /// Data class for Application Meta data
     /// </summary>
-    public class ApplicationMetadata
+    public class ApplicationMetaData
     {
         #region Auto Properties
         /// <summary>

@@ -7,8 +7,13 @@ namespace Common.Logging
     /// <summary>
     /// The caller meta data
     /// </summary>
-    public class CallerMetadata
+    public class ModuleMetadata
     {
+        /// <summary>
+        /// The name of the module (class)
+        /// </summary>
+        public string ModuleName { get; set; }
+
         /// <summary>
         /// The file that the call originated from
         /// </summary>
