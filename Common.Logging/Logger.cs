@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -86,10 +87,18 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        public void LogDebug(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0)
+        public void LogDebug(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null,
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "", 
+            [CallerMemberName] string caller = "", 
+            [CallerLineNumber] int lineNo = 0)
         {
             var logEntry = new LogEntry()
             {
@@ -110,6 +119,11 @@ namespace Common.Logging
             if (elaspedTime != null)
                 logEntry.ElaspedTime = elaspedTime.Value.ToString();
 
+            if(customPairs != null)
+            {
+                logEntry.CustomPairs = new List<CustomPair>(customPairs).ToArray();
+            }
+
             AddItem(logEntry);
         }
 
@@ -120,10 +134,18 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        public void LogError(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0)
+        public void LogError(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null,
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "", 
+            [CallerMemberName] string caller = "", 
+            [CallerLineNumber] int lineNo = 0)
         {
             var logEntry = new LogEntry()
             {
@@ -154,10 +176,18 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        public void LogFatal(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0)
+        public void LogFatal(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null,
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "", 
+            [CallerMemberName] string caller = "", 
+            [CallerLineNumber] int lineNo = 0)
         {
             var logEntry = new LogEntry()
             {
@@ -178,6 +208,11 @@ namespace Common.Logging
             if (elaspedTime != null)
                 logEntry.ElaspedTime = elaspedTime.Value.ToString();
 
+            if (customPairs != null)
+            {
+                logEntry.CustomPairs = new List<CustomPair>(customPairs).ToArray();
+            }
+
             AddItem(logEntry);
         }
 
@@ -188,10 +223,18 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        public void LogInfo(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0)
+        public void LogInfo(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null,
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "", 
+            [CallerMemberName] string caller = "", 
+            [CallerLineNumber] int lineNo = 0)
         {
             var logEntry = new LogEntry()
             {
@@ -212,6 +255,11 @@ namespace Common.Logging
             if (elaspedTime != null)
                 logEntry.ElaspedTime = elaspedTime.Value.ToString();
 
+            if (customPairs != null)
+            {
+                logEntry.CustomPairs = new List<CustomPair>(customPairs).ToArray();
+            }
+
             AddItem(logEntry);
         }
 
@@ -222,10 +270,18 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        public void LogWarning(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0)
+        public void LogWarning(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null,
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "", 
+            [CallerMemberName] string caller = "", 
+            [CallerLineNumber] int lineNo = 0)
         {
             var logEntry = new LogEntry()
             {
@@ -245,6 +301,11 @@ namespace Common.Logging
 
             if (elaspedTime != null)
                 logEntry.ElaspedTime = elaspedTime.Value.ToString();
+
+            if (customPairs != null)
+            {
+                logEntry.CustomPairs = new List<CustomPair>(customPairs).ToArray();
+            }
 
             AddItem(logEntry);
         }

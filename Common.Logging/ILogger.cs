@@ -23,10 +23,18 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        void LogDebug(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0);
+        void LogDebug(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null, 
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "", 
+            [CallerMemberName] string caller = "", 
+            [CallerLineNumber] int lineNo = 0);
 
         /// <summary>
         /// Log an info message
@@ -35,10 +43,18 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        void LogInfo(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0);
+        void LogInfo(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null,
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "",
+            [CallerMemberName] string caller = "",
+            [CallerLineNumber] int lineNo = 0);
 
         /// <summary>
         /// Log a Warning message
@@ -47,10 +63,18 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        void LogWarning(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0);
+        void LogWarning(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null,
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "",
+            [CallerMemberName] string caller = "",
+            [CallerLineNumber] int lineNo = 0);
 
         /// <summary>
         /// Log an Error message
@@ -59,10 +83,18 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        void LogError(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0);
+        void LogError(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null,
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "",
+            [CallerMemberName] string caller = "",
+            [CallerLineNumber] int lineNo = 0);
 
         /// <summary>
         /// Log a Fatal message
@@ -71,9 +103,17 @@ namespace Common.Logging
         /// <param name="message">the message to log (optional)</param>
         /// <param name="elaspedTime">the elasped time for the LogEntry (optional)</param>
         /// <param name="ex">The exception to include in the LogEntry (optional)</param>
+        /// <param name="customPairs">Custom key-value pair enumeration</param>
         /// <param name="filepath">The filepath where the log originates (supplied by system)</param>
         /// <param name="caller">The calling method (supplied by system)</param>
         /// <param name="lineNo">The line number where the Log originates (supplied by system)/param>
-        void LogFatal(Type type, string message = "", TimeSpan? elaspedTime = null, Exception ex = null, [CallerFilePath] string filepath = "", [CallerMemberName] string caller = "", [CallerLineNumber] int lineNo = 0);
+        void LogFatal(Type type, 
+            string message = "", 
+            TimeSpan? elaspedTime = null, 
+            Exception ex = null,
+            IEnumerable<CustomPair> customPairs = null,
+            [CallerFilePath] string filepath = "",
+            [CallerMemberName] string caller = "",
+            [CallerLineNumber] int lineNo = 0);
     }
 }

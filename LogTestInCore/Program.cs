@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace LogTestInCore
@@ -16,8 +17,8 @@ namespace LogTestInCore
 
             sw.Stop();
 
-            logger.LogDebug(typeof(Program), "Hello World!");
-            logger.LogInfo(typeof(Program), "Info 1");
+            logger.LogDebug(typeof(Program), "Logging test in .Net Core");
+            logger.LogInfo(typeof(Program), "Some Info to be logged");
             LogMore(logger);
             LogWithException(logger);
 
@@ -28,8 +29,13 @@ namespace LogTestInCore
 
         private static void LogMore(Logger logger)
         {
+            List<CustomPair> logPairs = new List<CustomPair>()
+            {
+                new CustomPair(){Key ="Custom1", Value=123245}
+            };
+
             Stopwatch sw = Stopwatch.StartNew();
-            logger.LogWarning(typeof(Program), "with MORE");
+            logger.LogWarning(typeof(Program), "with MORE", null, null, logPairs);
             sw.Stop();
 
             logger.LogInfo(typeof(Program), "How much time to log", sw.Elapsed);

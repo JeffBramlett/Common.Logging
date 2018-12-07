@@ -51,6 +51,8 @@ namespace Common.Logging
         /// </summary>
         public DateTimeOffset Timestamp { get; set; }
 
+        public CustomPair[] CustomPairs { get; set; }
+
         /// <summary>
         /// The application data for this log entry
         /// </summary>

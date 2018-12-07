@@ -24,7 +24,7 @@ namespace MultiThreadedLogging
 
         private static void StartLoop1ToLog(object state)
         {
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var something = "Loop: 1\tStep:" + i;
                 Logger.Instance.LogInfo(typeof(Program), something);
@@ -34,7 +34,7 @@ namespace MultiThreadedLogging
         private static void StartLoop2ToLog(object state)
         {
             var logger = state as Logger;
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var something = "Loop: 2\tStep:" + i;
                 Logger.Instance.LogInfo(typeof(Program), something);
